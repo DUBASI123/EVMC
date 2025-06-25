@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EVCP | Next-Gen Tech</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary-neon-color: #00e0ff; /* Slightly brighter neon */
+      --secondary-glow-color: #ff00ee; /* New accent color */
+      --text-light: #e0faff;
+      --bg-dark: #0a0a0a;
+      --card-bg: rgba(10, 10, 20, 0.6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      overflow: hidden; /* Hide scrollbars, 3D handles full view */
+      color: var(--text-light);
+    }
+
+    /* Three.js Canvas Container */
+    #three-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0; /* Will fade in with JS */
+      transition: opacity 1.5s ease-out; /* Smooth transition for 3D bg fade-in */
+    }
+
+    /* Content Overlay */
+    .content-overlay {
+      position: relative;
+      z-index: 1; /* Above 3D background */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      padding: 20px;
+      overflow-y: auto; /* Allow scrolling if content overflows on small screens */
+    }
+
+    .profile-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: url('assets/profile.png') no-repeat center/cover;
+      border: 2px solid var(--primary-neon-color);
+      cursor: pointer;
+      z-index: 100; /* Higher z-index for fixed elements */
+      box-shadow: 0 0 10px var(--primary-neon-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
+    }
+
+    .profile-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px var(--primary-neon-color);
+    }
+
+    .profile-popup {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 0 15px var(--primary-neon-color);
+      display: none; /* Controlled by JS */
+      opacity: 0; /* For CSS transition */
+      transform: translateY(-20px); /* For initial slide */
+      z-index: 99; /* Below profile icon */
+      transition: opacity 0.4s ease, transform 0.4s ease; /* Transition for show/hide */
+    }
+
+    .profile-popup.show {
+      display: block; /* Important for transition to apply */
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .main-hero {
+      max-width: 1000px; /* Increased max-width for videos */
+      margin: 0 auto;
+      transform: translateY(20px); /* GSAP will animate this */
+      opacity: 0; /* GSAP will animate this */
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      color: var(--primary-neon-color);
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px var(--primary-neon-color), 0 0 30px var(--secondary-glow-color);
+      letter-spacing: 2px;
+      line-height: 1.1;
+      animation: neonPulse 2s infinite alternate; /* Subtle continuous pulse */
+    }
+
+    @keyframes neonPulse {
+      from { text-shadow: 0 0 15px var(--primary-neon-color), 0 0 25px var(--secondary-glow-color); }
+      to { text-shadow: 0 0 25px var(--primary-neon-color), 0 0 40px var(--secondary-glow-color); }
+    }
+
+    p {
+      font-size: 1.3rem;
+      color: var(--text-light);
+      margin-bottom: 50px;
+      line-height: 1.6;
+    }
+
+    .video-showcase {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 60px;
+      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    }
+
+    .video-card {
+      width: 320px; /* Standard video width */
+      background: var(--card-bg);
+      border-radius: 15px;
+      border: 1px solid rgba(0, 224, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 224, 255, 0.2);
+      overflow: hidden; /* Ensures video corners are rounded */
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease; /* Transition for hover */
+      position: relative;
+    }
+
+    .video-card video {
+      width: 100%;
+      height: 180px; /* Fixed height for video consistency */
+      display: block; /* Remove extra space below video */
+      object-fit: cover; /* Cover the area, may crop */
+      border-bottom: 1px solid rgba(0, 224, 255, 0.3); /* Separator */
+    }
+
+    .video-card-title {
+      padding: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-light);
+      text-align: center;
+      text-shadow: 0 0 8px rgba(0,224,255,0.5);
+    }
+
+    .video-card:hover {
+      transform: translateY(-15px) scale(1.05); /* Pop-out effect */
+      box-shadow: 0 0 30px var(--primary-neon-color), 0 0 40px var(--secondary-glow-color);
+    }
+
+    .btn-explore {
+      background: linear-gradient(45deg, var(--primary-neon-color), var(--secondary-glow-color));
+      color: var(--bg-dark); /* Dark text on bright button */
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 80px;
+      box-shadow: 0 0 20px var(--primary-neon-color);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transition for hover */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-explore::before { /* Animated glow effect */
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+      z-index: 0;
+    }
+
+    .btn-explore:hover::before {
+      width: 200%;
+      height: 200%;
+      opacity: 1;
+    }
+
+    .btn-explore:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 0 30px var(--primary-neon-color), 0 0 40px var(--secondary-glow-color);
+    }
+
+    .btn-explore span {
+        position: relative; /* Keep text above pseudo-element */
+        z-index: 1;
+    }
+
+    /* Overlay for project launch */
+    .launch-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark); /* Solid background for transition */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      color: var(--primary-neon-color);
+      font-size: 3rem;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 0 0 20px var(--primary-neon-color);
+      opacity: 0;
+      visibility: hidden; /* Hide completely initially */
+      transition: opacity 0.8s ease-out, visibility 0.8s ease-out; /* Fade in */
+    }
+
+    .launch-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .loading-dots span {
+      display: inline-block;
+      margin: 0 5px;
+      animation: dotPulse 1.2s infinite ease-in-out;
+    }
+    .loading-dots span:nth-child(1) { animation-delay: 0s; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.5; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .video-showcase {
+        flex-direction: column;
+        align-items: center;
+      }
+      .video-card {
+        width: 90%; /* Wider cards on small screens */
+        height: auto; /* Adjust height based on video content */
+      }
+      .video-card video {
+        height: 200px; /* Allow video to expand */
+      }
+      .btn-explore {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+      .launch-overlay {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="three-bg"></div>
+
+  <div class="profile-icon" onclick="toggleProfile()"></div>
+  <div class="profile-popup" id="profilePopup">
+    <h3>User Info</h3>
+    <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+  </div>
+
+  <div class="content-overlay">
+    <div class="main-hero">
+      <h1 id="main-title">EVCP</h1>
+      <p id="main-description">Delivering cutting-edge solutions in **Embedded Systems**, **VLSI Design**, and **Advanced Communication** through AI-driven innovation and real-time simulations.</p>
+
+      <div class="video-showcase">
+        <div class="video-card">
+          <video controls loop muted>
+            <source src="assets/embedded_intro.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-card-title">Embedded Systems Overview</div>
+        </div>
+        <div class="video-card">
+          <video controls loop muted>
+            <source src="assets/vlsi_design.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-card-title">VLSI Design Highlights</div>
+        </div>
+        <div class="video-card">
+          <video controls loop muted>
+            <source src="assets/communication_tech.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-card-title">Communication Systems</div>
+        </div>
+      </div>
+
+      <button class="btn-explore" onclick="goToDomains()">
+        <span>Explore All Domains</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="launchOverlay" class="launch-overlay">
+    Loading Domains <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.164.1/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.164.1/examples/jsm/loaders/GLTFLoader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script>
+    // --- Profile Popup JS ---
+    function toggleProfile() {
+      const popup = document.getElementById("profilePopup");
+      popup.classList.toggle("show");
+    }
+
+    window.onload = function () {
+      document.getElementById("userName").textContent = localStorage.getItem("username") || "Guest";
+      document.getElementById("userEmail").textContent = localStorage.getItem("email") || "Not provided";
+
+      // GSAP entrance animation on load
+      gsap.fromTo("#three-bg", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" });
+      gsap.fromTo(".main-hero", { opacity: 0, translateY: 50 }, { opacity: 1, translateY: 0, duration: 1, delay: 0.8, ease: "power3.out" });
+      gsap.fromTo("#main-title", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1, delay: 1.2, ease: "back.out(1.7)" });
+      gsap.fromTo("#main-description", { opacity: 0, translateY: 20 }, { opacity: 1, translateY: 0, duration: 0.8, delay: 1.5, ease: "power2.out" });
+      gsap.fromTo(".video-card", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.8, delay: 1.8, ease: "back.out(1.7)", stagger: 0.2 });
+      gsap.fromTo(".btn-explore", { opacity: 0, translateY: 20 }, { opacity: 1, translateY: 0, duration: 0.8, delay: 2.2, ease: "power2.out" });
+    };
+
+    // --- Navigate to Domains Page JS ---
+    function goToDomains() {
+      const launchOverlay = document.getElementById("launchOverlay");
+      launchOverlay.classList.add("active"); // Activate fade-in
+
+      setTimeout(() => {
+        window.location.href = "projects.html"; // Redirect to new domains page
+      }, 2500); // Wait for overlay to fade in and show text
+    }
+
+
+    // --- Three.js Setup ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('three-bg').appendChild(renderer.domElement);
+
+    scene.background = new THREE.Color(0x0a0a0a);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x404040, 3);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight);
+    const pointLight = new THREE.PointLight(0x00ffff, 5, 100);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+    const pointLight2 = new THREE.PointLight(0xff00ee, 5, 100);
+    pointLight2.position.set(-5, -5, -5);
+    scene.add(pointLight2);
+
+
+    // Particles (Stars)
+    const starGeometry = new THREE.BufferGeometry();
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1, transparent: true, opacity: 0.7 });
+    const starVertices = [];
+    for (let i = 0; i < 5000; i++) {
+        const x = (Math.random() - 0.5) * 200;
+        const y = (Math.random() - 0.5) * 200;
+        const z = (Math.random() - 0.5) * 200;
+        starVertices.push(x, y, z);
+    }
+    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+
+    // Optional: Load a simple 3D model (e.g., a futuristic cube or abstract shape)
+    let techModel;
+    const loader = new THREE.GLTFLoader();
+    // Remember to place 'tech_cube.gltf' and its associated files in the 'assets' folder
+    loader.load('assets/tech_cube.gltf', function (gltf) {
+        techModel = gltf.scene;
+        techModel.position.set(0, 0, -10);
+        techModel.scale.set(0.5, 0.5, 0.5);
+        techModel.rotation.set(0.5, 0, 0);
+
+        techModel.traverse((o) => {
+            if (o.isMesh) {
+                o.material = new THREE.MeshStandardMaterial({
+                    color: 0x00ffff,
+                    emissive: 0x005555,
+                    metalness: 0.5,
+                    roughness: 0.3
+                });
+            }
+        });
+
+        scene.add(techModel);
+    }, undefined, function (error) {
+        console.error('An error occurred loading the GLTF model:', error);
+    });
+
+    camera.position.z = 5;
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      stars.rotation.x += 0.0001;
+      stars.rotation.y += 0.0002;
+
+      if (techModel) {
+        techModel.rotation.x += 0.0005;
+        techModel.rotation.y += 0.0008;
+      }
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

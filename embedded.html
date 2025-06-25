@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>EVCP | Embedded Systems Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* Consistent Color Variables */
+        :root {
+            --primary-neon-color: #00e0ff; /* Light blue neon */
+            --secondary-glow-color: #ff00ee; /* Magenta accent */
+            --text-light: #e0faff; /* Light text */
+            --bg-dark: #0a0a0a; /* Dark background */
+            --nav-bg: rgba(0, 0, 0, 0.8); /* Nav background */
+            --hover-color: #00c4ff; /* Button/link hover color */
+            --highlight-color: #ffdd00; /* Yellow highlight for hover glow */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Poppins', sans-serif; /* Using Poppins as primary */
+            background: var(--bg-dark); /* Fallback background */
+            color: var(--text-light);
+            overflow: hidden; /* Hide scrollbars, 3D handles full view */
+            /* Initial fade-in for the entire page content */
+            opacity: 0;
+            animation: fadeInPage 0.8s ease-out forwards;
+        }
+
+        /* Background Video */
+        #bgVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Ensures video covers the entire viewport */
+            z-index: -2; /* Placed very low in z-index */
+            opacity: 0.6; /* Slightly transparent to allow content to stand out */
+        }
+
+        /* Overlay for content readability over the video */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+            z-index: -1; /* Above video, below content */
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg); /* Use consistent nav background */
+            padding: 15px 40px;
+            display: flex;
+            justify-content: flex-end; /* Keeps "Back" button to the right */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: slideDown 0.6s ease-out forwards; /* Use 'forwards' to maintain end state */
+        }
+
+        nav a {
+            color: var(--hover-color); /* Use consistent neon blue */
+            text-decoration: none;
+            font-size: 18px;
+            margin-left: 25px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+        }
+
+        nav a:hover {
+            background-color: var(--hover-color);
+            color: var(--bg-dark); /* Text becomes dark on hover */
+            box-shadow: 0 0 10px var(--hover-color); /* Add a glow on hover */
+        }
+
+        h1 {
+            margin-top: 100px;
+            margin-bottom: 50px;
+            font-size: 36px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* Slightly darker background for text readability */
+            padding: 15px 30px;
+            border-radius: 12px;
+            z-index: 2;
+            color: var(--primary-neon-color); /* Neon color for heading */
+            text-shadow: 0 0 15px var(--primary-neon-color); /* Stronger neon glow */
+            animation: zoomIn 0.8s ease forwards, neonPulse 2s infinite alternate; /* Combine zoom and pulse */
+        }
+
+        @keyframes neonPulse {
+            from { text-shadow: 0 0 15px var(--primary-neon-color); }
+            to { text-shadow: 0 0 25px var(--primary-neon-color); }
+        }
+
+        .project-links {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 60px;
+            z-index: 2;
+            animation: float 6s infinite ease-in-out, linksFadeIn 1s ease-out 1s forwards; /* Combined animations */
+        }
+
+        @keyframes linksFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .project-links a {
+            font-size: 26px;
+            color: var(--primary-neon-color); /* Consistent neon blue */
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease; /* Added text-shadow transition */
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif; /* Changed to Orbitron for project links */
+            text-shadow: 0 0 10px var(--primary-neon-color); /* Initial glow */
+        }
+
+        .project-links a:hover {
+            color: var(--highlight-color); /* Yellow highlight on hover */
+            transform: scale(1.1) translateY(-5px); /* Scale up and slight lift */
+            text-shadow: 0 0 20px var(--highlight-color), 0 0 30px rgba(255, 221, 0, 0.5); /* Stronger glow on hover */
+        }
+
+        /* Loading Overlay for Transitions */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark); /* Solid dark background for transition */
+            color: var(--primary-neon-color);
+            font-size: 3rem;
+            display: flex;
+            flex-direction: column; /* For dots below text */
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 9999;
+            opacity: 0; /* Hidden by default */
+            visibility: hidden; /* Ensures it doesn't block clicks when not active */
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out; /* Smooth fade in/out */
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            margin: 0 5px;
+            animation: dotPulse 1.2s infinite ease-in-out;
+        }
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        /* General CSS Animations */
+        @keyframes fadeInPage { /* New animation for initial page load */
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 600px) {
+            .project-links {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .project-links a {
+                font-size: 20px;
+            }
+            h1 {
+                font-size: 28px;
+                margin-top: 80px;
+            }
+            .loading-overlay {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="assets/background_projects.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+
+    <nav>
+        <a href="domains.html" onclick="triggerPageTransition(event, 'domains.html')">Back</a>
+    </nav>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        Loading <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+
+    <h1>Projects</h1>
+
+    <div class="project-links">
+        <a href="#" onclick="triggerPageTransition(event, 'mini.html')">Mini Projects</a>
+        <a href="#" onclick="triggerPageTransition(event, 'major.html')">Major Projects</a>
+    </div>
+
+    <script>
+        // Universal function to trigger the page transition
+        function triggerPageTransition(event, url) {
+            event.preventDefault(); // Prevent default link behavior immediately
+
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            // Optionally change text based on destination
+            if (url.includes('mini.html') || url.includes('major.html')) {
+                loadingOverlay.innerHTML = `Loading Projects <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>`;
+            } else if (url.includes('domains.html')) {
+                loadingOverlay.innerHTML = `Going Back <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>`;
+            } else {
+                loadingOverlay.innerHTML = `Loading <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>`;
+            }
+
+            loadingOverlay.classList.add("active"); // Activate overlay (fades in)
+
+            // After the overlay fully appears, navigate to the new page
+            setTimeout(() => {
+                window.location.href = url;
+            }, 800); // This delay should match the 'transition' duration of .loading-overlay CSS (0.8s)
+        }
+    </script>
+</body>
+</html>

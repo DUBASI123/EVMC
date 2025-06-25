@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Projects</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      padding: 80px 20px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.8);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: flex-end;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #00c4ff;
+      text-decoration: none;
+      font-size: 18px;
+      margin-left: 25px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #00c4ff;
+      color: #000;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      font-size: 36px;
+      text-align: center;
+    }
+
+    .sections {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .section-card {
+      background: #222;
+      padding: 25px 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00c4ff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ffdd00;
+    }
+
+    .section-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .section-card h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #00c4ff;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="projects.html">Back to Projects</a>
+  </nav>
+
+  <h1>SECTIONS & BATCHES </h1>
+
+  <div class="sections">
+    <div class="section-card" onclick="location.href='ece-a.html'">
+      <img src="images/ece-a.jpg" alt="ECE A " />
+      <h2>ECE A </h2>
+    </div>
+
+    <div class="section-card" onclick="location.href='ece-b.html'">
+      <img src="images/ece-b.jpg" alt="ECE B " />
+      <h2>ECE B </h2>
+    </div>
+
+    <div class="section-card" onclick="location.href='ece-c.html'">
+      <img src="images/ece-c.jpg" alt="ECE C " />
+      <h2>ECE C </h2>
+    </div>
+  </div>
+</body>
+</html>

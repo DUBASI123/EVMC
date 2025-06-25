@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - EVCP</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0; left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.9;
+    }
+
+    #loginBox {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.75);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px #00f2ff88;
+      width: 360px;
+      text-align: center;
+      color: white;
+      backdrop-filter: blur(5px);
+      animation: slideUp 1s ease;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #00f2ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #eee;
+      color: #111;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      box-shadow: 0 0 10px #00f2ff;
+      animation: glow 1s infinite alternate;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00f2ff;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #00c7d4;
+    }
+
+    #loadingMessage {
+      margin-top: 16px;
+      color: #0ff;
+      display: none;
+      font-size: 16px;
+    }
+
+    #loadingMessage::after {
+      content: '';
+      display: inline-block;
+      animation: dots 1s steps(4, end) infinite;
+    }
+
+    #error {
+      color: #ff6a6a;
+      margin-top: 10px;
+      height: 20px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100%); opacity: 0; }
+      to { transform: translate(-50%, -50%); opacity: 1; }
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px #00f2ff; }
+      to { box-shadow: 0 0 15px #00f2ff; }
+    }
+
+    @keyframes popOut {
+      0%   { transform: scale(1); opacity: 1; }
+      50%  { transform: scale(1.2); }
+      100% { transform: scale(0.8); opacity: 0; }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(-50%, -50%) translateX(0); }
+      25% { transform: translate(-50%, -50%) translateX(-10px); }
+      50% { transform: translate(-50%, -50%) translateX(10px); }
+      75% { transform: translate(-50%, -50%) translateX(-10px); }
+      100% { transform: translate(-50%, -50%) translateX(0); }
+    }
+
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+
+    .pop-out { animation: popOut 1s ease forwards; }
+    .shake { animation: shake 0.4s ease; }
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop id="bgVideo">
+    <source src="https://cdn.pixabay.com/vimeo/770964223/nature-139339.mp4?width=1280&hash=68c4c7bb88183785c72713dc09b4e2ae3e28f1be" type="video/mp4">
+  </video>
+
+  <div id="loginBox">
+    <h2>Login to EVCP</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="loadingMessage">Logging in</p>
+    <p id="error"></p>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error");
+      const loading = document.getElementById("loadingMessage");
+      const box = document.getElementById("loginBox");
+
+      if (username && password) {
+        localStorage.setItem("username", username);
+        error.textContent = "";
+        loading.style.display = "block";
+        box.classList.add("pop-out");
+
+        setTimeout(() => {
+          window.location.href = "logo.html";
+        }, 3000);
+      } else {
+        error.textContent = "Please enter username and password.";
+        box.classList.remove("pop-out");
+        box.classList.add("shake");
+        setTimeout(() => box.classList.remove("shake"), 400);
+      }
+    }
+  </script>
+</body>
+</html>

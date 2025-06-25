@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Team Details - More Info</title>
+<style>
+  body {
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1, h2 {
+    color: #00f2ff;
+    text-shadow: 0 0 15px #00f2ff;
+  }
+  .team-member {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+    background: rgba(0, 242, 255, 0.1);
+    border-radius: 20px;
+    padding: 10px;
+  }
+  .team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 25px;
+    object-fit: cover;
+    box-shadow: 0 0 10px #00f2ff;
+  }
+  .member-info {
+    font-size: 1.1rem;
+  }
+  .project-info {
+    margin-top: 30px;
+    background: rgba(0, 242, 255, 0.1);
+    padding: 20px;
+    border-radius: 25px;
+  }
+  .project-info img {
+    max-width: 100%;
+    margin: 10px 0;
+    border-radius: 15px;
+  }
+  .docs-list {
+    margin-top: 20px;
+  }
+  .docs-list a {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: #00f2ff;
+    color: #0a0a0a;
+    border-radius: 20px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 0 10px #00f2ff;
+    transition: background-color 0.3s ease;
+  }
+  .docs-list a:hover {
+    background-color: #00b8d9;
+  }
+</style>
+</head>
+<body>
+
+<h1 id="leaderName">Loading...</h1>
+
+<section id="teamMembersSection">
+  <h2>Team Members</h2>
+</section>
+
+<section id="projectInfoSection">
+  <h2>Project Details</h2>
+</section>
+
+<section id="documentsSection">
+  <h2>Documents</h2>
+  <div class="docs-list" id="docsList"></div>
+</section>
+
+<script>
+  // Data for your teams - add/change content/images/docs as needed
+  const data = {
+    "Ajay": {
+      teamMembers: [
+        {name: "Ajay Kumar", role: "Team Leader", img: "images/ajay.jpg", bio: "Expert in embedded systems and microcontrollers."},
+        {name: "Rahul Singh", role: "Member", img: "images/rahul.jpg", bio: "Sensor integration and hardware design specialist."},
+        {name: "Neha Sharma", role: "Member", img: "images/neha.jpg", bio: "Software developer and UI designer."}
+      ],
+      project: {
+        title: "Smart Traffic Control System",
+        description: "An automated traffic control system using embedded microcontrollers and sensors. It optimizes traffic flow and reduces congestion in urban areas.",
+        images: [
+          "images/smart-traffic1.jpg",
+          "images/smart-traffic2.jpg"
+        ]
+      },
+      documents: [
+        {name: "Abstract", url: "docs/ajay-abstract.pdf"},
+        {name: "Project Presentation (PPT)", url: "docs/ajay-presentation.pptx"},
+        {name: "Project Documentation", url: "docs/ajay-documentation.pdf"}
+      ]
+    },
+
+    "Srija": {
+      teamMembers: [
+        {name: "Srija Patel", role: "Team Leader", img: "images/srija.jpg", bio: "IoT enthusiast with expertise in agriculture monitoring."},
+        {name: "Karan Mehta", role: "Member", img: "images/karan.jpg", bio: "Embedded software engineer focusing on sensor networks."}
+      ],
+      project: {
+        title: "IoT Based Agriculture Monitoring System",
+        description: "A real-time soil moisture and environment monitoring system to optimize irrigation and improve crop yield using IoT technology.",
+        images: [
+          "images/agri1.jpg"
+        ]
+      },
+      documents: [
+        {name: "Abstract", url: "docs/srija-abstract.pdf"},
+        {name: "Project Presentation (PPT)", url: "docs/srija-presentation.pptx"}
+      ]
+    }
+
+    // Add more team leaders here as needed
+  };
+
+  // Get URL param "leader"
+  function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  const leaderName = getQueryParam('leader');
+  const leaderData = data[leaderName];
+
+  const leaderNameElem = document.getElementById('leaderName');
+  const teamMembersSection = document.getElementById('teamMembersSection');
+  const projectInfoSection = document.getElementById('projectInfoSection');
+  const docsList = document.getElementById('docsList');
+
+  if (!leaderData) {
+    leaderNameElem.textContent = "Team Leader or Project Not Found";
+    teamMembersSection.style.display = 'none';
+    projectInfoSection.style.display = 'none';
+    docsList.style.display = 'none';
+  } else {
+    leaderNameElem.textContent = leaderName;
+
+    // Display team members
+    leaderData.teamMembers.forEach(member => {
+      const memberDiv = document.createElement('div');
+      memberDiv.className = 'team-member';
+      memberDiv.innerHTML = `
+        <img src="${member.img}" alt="${member.name}" />
+        <div class="member-info">
+          <h3>${member.name} - ${member.role}</h3>
+          <p>${member.bio}</p>
+        </div>
+      `;
+      teamMembersSection.appendChild(memberDiv);
+    });
+
+    // Display project info
+    const project = leaderData.project;
+    const projectHTML = `
+      <h3>${project.title}</h3>
+      <p>${project.description}</p>
+      ${project.images.map(img => `<img src="${img}" alt="${project.title} image" />`).join('')}
+    `;
+    projectInfoSection.innerHTML += projectHTML;
+
+    // Display documents as links
+    leaderData.documents.forEach(doc => {
+      const a = document.createElement('a');
+      a.href = doc.url;
+      a.textContent = doc.name;
+      a.target = '_blank';
+      a.download = '';
+      docsList.appendChild(a);
+    });
+  }
+</script>
+
+</body>
+</html>

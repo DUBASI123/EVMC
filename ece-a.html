@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Team Project Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .popup-animate-enter {
+      transform: scale(0.9) rotateX(-10deg);
+      opacity: 0;
+    }
+    .popup-animate-enter-active {
+      transition: all 0.5s ease;
+      transform: scale(1) rotateX(0deg);
+      opacity: 1;
+    }
+    .popup-animate-leave {
+      transform: scale(1) rotateX(0deg);
+      opacity: 1;
+    }
+    .popup-animate-leave-active {
+      transition: all 0.3s ease;
+      transform: scale(0.9) rotateX(-10deg);
+      opacity: 0;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] text-white min-h-screen p-8 relative">
+
+<!-- Background Video Replaced with Local File -->
+<video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover z-[-1]">
+  <source src="C:/Users/dubas/Downloads/ai.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div x-data="{
+  activeIndex: null,
+  showMore: false,
+  activeTab: 'abstract',
+  team: Array.from({ length: 12 }, (_, i) => ({
+    name: `Leader ${i + 1}`,
+    role: 'Team Leader',
+    id: `TL${i + 1}00`,
+    info: `This is a short bio for Leader ${i + 1}, experienced in tech and project management.`,
+    img: `${i + 20}`,
+    project: {
+      title: `Project Title ${i + 1}`,
+      description: `Description for project ${i + 1}.`,
+      image: 'https://via.placeholder.com/400x200?text=Project+Image',
+      video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      abstract: 'This is the abstract for the project.',
+      document: 'https://www.orimi.com/pdf-test.pdf',
+      ppt: 'https://file-examples.com/storage/fe1cc3c3a72a842b58c58fa/2017/08/file_example_PPT_1MB.ppt',
+      members: Array.from({ length: 4 }, (__, j) => ({
+        id: `T${i + 1}0${j + 1}`,
+        name: j === 0 ? `Leader ${i + 1} (Team Leader)` : `Member ${j + 1}`,
+        img: `${j + 1}`
+      }))
+    }
+  }))
+}" class="relative">
+
+  <!-- Profile Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto z-0 relative">
+    <template x-for="(member, index) in team" :key="index">
+      <div
+        @click="activeIndex === null ? (activeIndex = index, showMore = false) : null"
+        class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg overflow-hidden transition transform hover:scale-105 cursor-pointer"
+        :class="{
+          'pointer-events-none opacity-40 blur-sm': activeIndex !== null,
+          'pointer-events-auto opacity-100': activeIndex === null
+        }"
+      >
+        <div class="p-6 flex flex-col items-center text-center">
+          <img :src="`https://i.pravatar.cc/150?img=${member.img}`" class="w-40 h-40 rounded-full border-4 border-white/30 mb-4" />
+          <h3 class="text-xl font-bold" x-text="member.name"></h3>
+          <p class="text-sm text-gray-300" x-text="member.id"></p>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Popup -->
+  <template x-if="activeIndex !== null">
+    <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div
+        class="popup-animate-enter popup-animate-enter-active bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-8 max-w-6xl w-full text-left relative shadow-2xl overflow-y-auto max-h-[90vh]"
+        x-init="$el.classList.remove('popup-animate-enter'); setTimeout(() => $el.classList.remove('popup-animate-enter-active'), 500)"
+      >
+        <button @click="activeIndex = null; showMore = false;" class="absolute top-3 right-4 text-white text-2xl hover:text-red-400">&times;</button>
+
+        <div x-show="team[activeIndex].project">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-1" x-text="team[activeIndex].project.title"></h2>
+            <p class="mb-2 text-sm text-gray-300" x-text="team[activeIndex].project.description"></p>
+            <h3 class="text-lg font-semibold" x-text="team[activeIndex].name"></h3>
+            <p class="text-sm text-gray-300" x-text="team[activeIndex].id"></p>
+            <p class="text-sm mb-4" x-text="team[activeIndex].info"></p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <img :src="team[activeIndex].project.image" alt="Project" class="rounded-lg">
+            <video controls class="rounded-lg">
+              <source :src="team[activeIndex].project.video" type="video/mp4">
+            </video>
+          </div>
+
+          <h3 class="text-xl font-semibold mb-2">Team Members</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-6">
+            <template x-for="member in team[activeIndex].project.members" :key="member.id">
+              <div class="text-center">
+                <img :src="`https://i.pravatar.cc/150?img=${member.img}`" class="w-28 h-28 rounded-full mx-auto border-4 border-white/30 mb-2" />
+                <div class="text-sm font-semibold" x-text="member.name"></div>
+                <div class="text-xs text-gray-300" x-text="member.id"></div>
+              </div>
+            </template>
+          </div>
+
+          <div class="flex space-x-4 mb-4">
+            <button @click="activeTab = 'abstract'" :class="activeTab === 'abstract' ? 'bg-white/20' : ''" class="px-4 py-2 rounded-md border border-white/30">Abstract</button>
+            <button @click="activeTab = 'files'" :class="activeTab === 'files' ? 'bg-white/20' : ''" class="px-4 py-2 rounded-md border border-white/30">Files</button>
+          </div>
+
+          <div x-show="activeTab === 'abstract'">
+            <p class="bg-white/10 p-4 rounded-md mb-4" x-text="team[activeIndex].project.abstract"></p>
+          </div>
+
+          <div x-show="activeTab === 'files'" class="mb-4 space-y-4">
+            <div>
+              <iframe :src="team[activeIndex].project.document" class="w-full h-64 rounded-md mb-2"></iframe>
+              <a :href="team[activeIndex].project.document" download class="text-blue-300 underline">Download Document</a>
+            </div>
+            <div>
+              <iframe :src="team[activeIndex].project.ppt" class="w-full h-64 rounded-md mb-2"></iframe>
+              <a :href="team[activeIndex].project.ppt" download class="text-blue-300 underline">Download PPT</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+
+</body>
+</html>

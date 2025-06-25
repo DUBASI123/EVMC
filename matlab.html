@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Embedded Systems Projects</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      overflow-x: hidden;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    /* Background Video */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: flex-end;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    nav a {
+      color: #00c4ff;
+      text-decoration: none;
+      font-size: 18px;
+      margin-left: 25px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #00c4ff;
+      color: #000;
+    }
+
+    h1 {
+      margin-top: 100px;
+      margin-bottom: 50px;
+      font-size: 36px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px 30px;
+      border-radius: 12px;
+      z-index: 2;
+      animation: zoomIn 0.8s ease;
+    }
+
+    .project-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 60px;
+      z-index: 2;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .project-links a {
+      font-size: 26px;
+      color: #00c4ff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s ease, transform 0.3s ease;
+      font-weight: bold;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .project-links a:hover {
+      color: #ffdd00;
+      transform: scale(1.1);
+    }
+
+    /* Popup overlay */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      color: #00f2ff;
+      font-size: 1.6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Orbitron', sans-serif;
+      z-index: 9999;
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @media (max-width: 600px) {
+      .project-links {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .project-links a {
+        font-size: 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="ssss.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="projects.html">Back</a>
+  </nav>
+
+  <!-- Popup Overlay -->
+  <div class="overlay" id="overlay">Loading Projects...</div>
+
+  <!-- Heading -->
+  <h1>Projects</h1>
+
+  <!-- Project Links -->
+  <div class="project-links">
+    <a href="#" onclick="navigateWithOverlay('mini.html')">Mini Projects</a>
+    <a href="#" onclick="navigateWithOverlay('major.html')">Major Projects</a>
+  </div>
+
+  <!-- Script for transition -->
+  <script>
+    function navigateWithOverlay(url) {
+      const overlay = document.getElementById("overlay");
+      overlay.style.display = "flex";
+
+      setTimeout(() => {
+        window.location.href = url;
+      }, 2000); // Delay for transition effect
+    }
+  </script>
+</body>
+</html>

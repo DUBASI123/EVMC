@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Embedded Systems Projects</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      padding: 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    /* Background Video */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: flex-end;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #00c4ff;
+      text-decoration: none;
+      font-size: 18px;
+      margin-left: 25px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #00c4ff;
+      color: #000;
+    }
+
+    h1 {
+      margin-top: 60px;
+      margin-bottom: 50px;
+      font-size: 36px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px 30px;
+      border-radius: 12px;
+      z-index: 2;
+    }
+
+    .project-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 60px;
+      z-index: 2;
+    }
+
+    .project-links a {
+      font-size: 26px;
+      color: #00c4ff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      font-weight: bold;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .project-links a:hover {
+      color: #ffdd00;
+    }
+
+    @media (max-width: 600px) {
+      .project-links {
+        gap: 30px;
+      }
+      .project-links a {
+        font-size: 20px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="C:/Users/dubas/Downloads/ssss.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <nav>
+    <a href="projects.html">Back</a>
+  </nav>
+
+  <h1>Projects</h1>
+
+  <div class="project-links">
+    <a href="mini.html">Mini Projects</a>
+    <a href="major.html">Major Projects</a>
+
+  </div>
+
+</body>
+</html>

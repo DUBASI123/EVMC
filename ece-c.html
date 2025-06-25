@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile Flip Cards with Animations</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Times New Roman', Tahoma, Geneva, Verdana, sans-serif;
+      background: #140101;
+      overflow-x: hidden;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    #bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1;
+      object-fit: cover;
+      filter: brightness(0.6) contrast(1.2);
+    }
+
+    body {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      gap: 50px;
+      min-height: 100vh;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      width: 280px;
+      height: 380px;
+      perspective: 1200px;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      border-radius: 20px;
+      box-shadow:
+        0 6px 20px rgba(0,0,0,0.5),
+        0 10px 30px rgba(0,0,0,0.3);
+      will-change: transform, filter;
+      filter: none;
+      outline: none;
+      animation: floatUp 0.8s ease forwards;
+    }
+
+    .flip-card:nth-child(1) { animation-delay: 0s; }
+    .flip-card:nth-child(2) { animation-delay: 0.1s; }
+    .flip-card:nth-child(3) { animation-delay: 0.2s; }
+    .flip-card:nth-child(4) { animation-delay: 0.3s; }
+    .flip-card:nth-child(5) { animation-delay: 0.4s; }
+    .flip-card:nth-child(6) { animation-delay: 0.5s; }
+    .flip-card:nth-child(7) { animation-delay: 0.6s; }
+    .flip-card:nth-child(8) { animation-delay: 0.7s; }
+    .flip-card:nth-child(9) { animation-delay: 0.8s; }
+    .flip-card:nth-child(10) { animation-delay: 0.9s; }
+    .flip-card:nth-child(11) { animation-delay: 1s; }
+    .flip-card:nth-child(12) { animation-delay: 1.1s; }
+
+    .flip-card.blurred {
+      filter: blur(6px) brightness(0.8);
+      pointer-events: none;
+    }
+
+    .flip-card:hover:not(.blurred) {
+      transform: scale(1.05);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.7),
+        0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      border-radius: 20px;
+    }
+
+    .flip-card.active .flip-card-inner {
+      transform: rotateY(180deg) scale(1.05);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background-clip: padding-box;
+    }
+
+    .flip-card-front {
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #222;
+      user-select: none;
+    }
+
+    .flip-card-front img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      object-fit: cover;
+      border: 4px solid #444;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.4s ease;
+    }
+
+    .flip-card.active .flip-card-front img {
+      transform: scale(1.15);
+    }
+
+    .flip-card-front h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .flip-card-front p {
+      margin: 6px 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .flip-card-back {
+      background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
+      color: #e0e0e0;
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      user-select: none;
+    }
+
+    .flip-card-back h3 {
+      margin-bottom: 15px;
+      font-size: 1.9rem;
+      letter-spacing: 1.1px;
+      font-weight: 700;
+      text-shadow: 0 0 5px #4ef8f1;
+    }
+
+    .flip-card-back p {
+      font-size: 1rem;
+      white-space: pre-line;
+      line-height: 1.5;
+      margin: 0 0 15px 0;
+      text-align: center;
+      color: #ccc;
+    }
+
+    .doc-links a {
+      color: #4ef8f1;
+      text-decoration: none;
+      display: block;
+      margin: 7px 0;
+      font-weight: 600;
+      transition: color 0.3s ease;
+      user-select: text;
+    }
+
+    .doc-links a:hover {
+      color: #82f1e9;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background video -->
+  <video id="bg-video" autoplay muted loop playsinline preload="auto">
+    <source src="ai.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    const profiles = [
+      { name: "Ajay", title: "Project A", members: "Member A1\nMember A2\nMember A3" },
+      { name: "Srija", title: "Project B", members: "Member B1\nMember B2\nMember B3" },
+      { name: "Siri", title: "Project C", members: "Member C1\nMember C2\nMember C3" },
+      { name: "Chandhana", title: "Project D", members: "Member D1\nMember D2\nMember D3" },
+      { name: "Susmitha", title: "Project E", members: "Member E1\nMember E2\nMember E3" },
+      { name: "Pooja", title: "Project F", members: "Member F1\nMember F2\nMember F3" },
+      { name: "Akashay", title: "Project G", members: "Member G1\nMember G2\nMember G3" },
+      { name: "Vignesh", title: "Project H", members: "Member H1\nMember H2\nMember H3" },
+      { name: "Ravi", title: "Project I", members: "Member I1\nMember I2\nMember I3" },
+      { name: "Shashi", title: "Project J", members: "Member J1\nMember J2\nMember J3" },
+      { name: "Udhaysri", title: "Project K", members: "Member K1\nMember K2\nMember K3" },
+      { name: "Pravalika", title: "Project L", members: "Member L1\nMember L2\nMember L3" },
+    ];
+
+    profiles.forEach(profile => {
+      document.write(`
+        <div class="flip-card" tabindex="0" aria-label="Profile card for ${profile.name}">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="https://via.placeholder.com/150?text=${encodeURIComponent(profile.name)}" alt="${profile.name}" />
+              <h3>${profile.name}</h3>
+              <p>${profile.title}</p>
+            </div>
+            <div class="flip-card-back">
+              <h3>Team Members</h3>
+              <p>${profile.members}</p>
+              <div class="doc-links">
+                <a href="#">Abstract</a>
+                <a href="#">Documentation</a>
+                <a href="#">PPT</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+    });
+
+    // Delay attaching event listeners to allow all DOM to load
+    window.addEventListener('DOMContentLoaded', () => {
+      const cards = [...document.querySelectorAll('.flip-card')];
+      let activeCard = null;
+
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          if (activeCard === card) {
+            card.classList.remove('active');
+            activeCard = null;
+            cards.forEach(c => c.classList.remove('blurred'));
+          } else {
+            if (activeCard) activeCard.classList.remove('active');
+            activeCard = card;
+            card.classList.add('active');
+            cards.forEach(c => {
+              if (c !== card) {
+                c.classList.add('blurred');
+              } else {
+                c.classList.remove('blurred');
+              }
+            });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

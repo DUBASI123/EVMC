@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Projects - Sections & Batches</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      padding: 80px 20px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.8);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: flex-end;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #00c4ff;
+      text-decoration: none;
+      font-size: 18px;
+      margin-left: 25px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #00c4ff;
+      color: #000;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      font-size: 36px;
+      text-align: center;
+    }
+
+    .sections {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .section-card {
+      background: #222;
+      padding: 25px 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00c4ff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ffdd00;
+    }
+
+    .section-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .section-card h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #00c4ff;
+    }
+
+    #content-box {
+      max-width: 900px;
+      background: #222;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 25px #00c4ff;
+      color: #eee;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    #content-box img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    #content-box h2 {
+      color: #ffdd00;
+      margin-top: 0;
+    }
+
+    #content-box a {
+      color: #00c4ff;
+      text-decoration: none;
+    }
+
+    #content-box a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="projects.html">Back to Projects</a>
+  </nav>
+
+  <h1>SECTIONS & BATCHES</h1>
+
+  <div class="sections">
+    <div class="section-card" onclick="showContent('ece-a')">
+      <img src="C:\Users\dubas\Downloads\redhat.jpg" alt="ECE A" />
+      <h2>ECE A</h2>
+    </div>
+
+    <div class="section-card" onclick="showContent('ece-b')">
+      <img src="C:\Users\dubas\Downloads\whitehat.jpg" alt="ECE B" />
+      <h2>ECE B</h2>
+    </div>
+
+    <div class="section-card" onclick="showContent('ece-c')">
+      <img src="C:\Users\dubas\Downloads\blackhat.jpg" alt="ECE C" />
+      <h2>ECE C</h2>
+    </div>
+  </div>
+
+  <div id="content-box">
+    <p>Click on any section above to view details here.</p>
+  </div>
+
+  <script>
+    const sharedContent = `
+      <p><strong>Team Leader:</strong> John Doe</p>
+      <p><strong>Project Title:</strong> Smart Bus Passenger Counting System</p>
+      <p><strong>Team Members:</strong> Alice, Bob, Charlie</p>
+      <p><strong>Project Info:</strong> A system to count passengers in real-time and manage overload using IR sensors and Arduino.</p>
+      <p><strong>Documents:</strong> 
+        <a href="documents/shared/project-doc.pdf" target="_blank">Project Document</a> | 
+        <a href="documents/shared/presentation.pptx" target="_blank">PPT</a> | 
+        <a href="documents/shared/abstract.pdf" target="_blank">Abstract</a>
+      </p>
+    `;
+
+    const contentData = {
+      "ece-a": {
+        title: "ECE A - Mini Projects",
+        img: "images/ece-a.jpg",
+        description: sharedContent + `<img src="images/ece-a-project.jpg" alt="ECE A Project Image" />`
+      },
+      "ece-b": {
+        title: "ECE B - Mini Projects",
+        img: "images/ece-b.jpg",
+        description: sharedContent + `<img src="images/ece-b-project.jpg" alt="ECE B Project Image" />`
+      },
+      "ece-c": {
+        title: "ECE C - Mini Projects",
+        img: "images/ece-c.jpg",
+        description: sharedContent + `<img src="images/ece-c-project.jpg" alt="ECE C Project Image" />`
+      }
+    };
+
+    function showContent(section) {
+      const box = document.getElementById('content-box');
+      if (contentData[section]) {
+        const data = contentData[section];
+        box.innerHTML = `
+          <h2>${data.title}</h2>
+          <img src="${data.img}" alt="${data.title}" />
+          ${data.description}
+        `;
+        box.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  </script>
+</body>
+</html>

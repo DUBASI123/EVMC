@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Project Profiles - Modern Cards with Background Video</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e6f0ff;
+    overflow-x: hidden;
+  }
+
+  /* Background video container */
+  #video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  /* Dark overlay to improve readability */
+  #video-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 20, 40, 0.7);
+    z-index: -1;
+  }
+
+  /* Main container with grid */
+  main {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* Profile Card */
+  .profile-card {
+    background: rgba(255 255 255 / 0.1);
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.25);
+    padding: 20px 25px 25px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+    outline: none;
+  }
+  .profile-card:hover,
+  .profile-card:focus {
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .profile-header img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #5274f7aa;
+    flex-shrink: 0;
+  }
+
+  .profile-info {
+    flex-grow: 1;
+  }
+
+  .name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px;
+    letter-spacing: 0.8px;
+    color: #a8c8ff;
+  }
+
+  .project {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: #c3d9ff;
+    font-style: italic;
+  }
+
+  .team {
+    font-size: 14px;
+    font-weight: 500;
+    color: #92aede;
+  }
+
+  /* Toggle Button */
+  .toggle-btn {
+    align-self: flex-start;
+    margin-top: 15px;
+    background: transparent;
+    border: 2px solid #5274f7;
+    padding: 10px 24px;
+    border-radius: 20px;
+    color: #5274f7;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .toggle-btn:hover,
+  .toggle-btn:focus {
+    background-color: #5274f7;
+    color: white;
+    outline: none;
+  }
+
+  /* Details section hidden by default */
+  .details {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.4s ease 0.1s;
+    margin-top: 20px;
+    color: #c4d5ffcc;
+    font-size: 14.5px;
+  }
+
+  /* Show details when expanded */
+  .profile-card.expanded .details {
+    max-height: 600px;
+    opacity: 1;
+  }
+
+  .project-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #5274f7aa;
+    box-shadow: 0 0 10px #5274f7aa;
+  }
+
+  .team-members {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .team-member {
+    text-align: center;
+    font-size: 12px;
+    color: #a6bfffcc;
+    user-select: none;
+  }
+
+  .team-member img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #5274f7bb;
+    margin-bottom: 6px;
+  }
+
+  /* Scrollbar for details if overflow */
+  .details {
+    scrollbar-width: thin;
+    scrollbar-color: #5274f7 transparent;
+  }
+  .details::-webkit-scrollbar {
+    width: 8px;
+  }
+  .details::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .details::-webkit-scrollbar-thumb {
+    background-color: #5274f7;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <!-- Background Video -->
+  <video autoplay muted loop id="video-bg" playsinline>
+    <source src="C:\Users\dubas\Downloads\video.mp4" type="video/mp4" />
+    <source src="C:\Users\dubas\Downloads\video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <!-- Overlay -->
+  <div id="video-overlay"></div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Profile Card 1 -->
+    <div class="profile-card" tabindex="0" aria-expanded="false" aria-controls="details1">
+      <div class="profile-header">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" alt="Alice Johnson" />
+        <div class="profile-info">
+          <h2 class="name">Alice Johnson</h2>
+          <p class="project">Smart Bus Passenger Counting System</p>
+          <p class="team">Team A - IoT and Embedded Systems</p>
+        </div>
+      </div>
+      <button aria-controls="details1" aria-expanded="false" class="toggle-btn">More Details</button>
+      <div class="details" id="details1" role="region" aria-live="polite">
+        <img class="project-image" src="https://i.imgur.com/9Q2vF2p.jpg" alt="Smart Bus Project" />
+        <p><strong>Project Description:</strong> Developed a bus passenger counting system using Arduino and IR sensors to manage overload and send SMS alerts without a GSM module.</p>
+        <p><strong>Technologies:</strong> Arduino Uno, IR Sensors, Relay, LCD with I2C</p>
+        <p><strong>Team Members:</strong></p>
+        <div class="team-members">
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/men/68.jpg" alt="Bob Smith" /><br />Bob Smith</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Clara Lee" /><br />Clara Lee</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/women/66.jpg" alt="Dana Kim" /><br />Dana Kim</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Card 2 -->
+    <div class="profile-card" tabindex="0" aria-expanded="false" aria-controls="details2">
+      <div class="profile-header">
+        <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80" alt="Mark Stevens" />
+        <div class="profile-info">
+          <h2 class="name">Mark Stevens</h2>
+          <p class="project">Embedded System for Smart Home Automation</p>
+          <p class="team">Team B - Home IoT</p>
+        </div>
+      </div>
+      <button aria-controls="details2" aria-expanded="false" class="toggle-btn">More Details</button>
+      <div class="details" id="details2" role="region" aria-live="polite">
+        <img class="project-image" src="https://i.imgur.com/fP7z5Vt.jpg" alt="Smart Home Project" />
+        <p><strong>Project Description:</strong> Designed a home automation system using Arduino and GSM modules to control appliances remotely via SMS commands.</p>
+        <p><strong>Technologies:</strong> Arduino Mega, GSM Module, Relay, Sensors</p>
+        <p><strong>Team Members:</strong></p>
+        <div class="team-members">
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/men/43.jpg" alt="Samantha Green" /><br />Samantha Green</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/women/49.jpg" alt="James Wilson" /><br />James Wilson</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/men/50.jpg" alt="Emily Davis" /><br />Emily Davis</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Card 3 -->
+    <div class="profile-card" tabindex="0" aria-expanded="false" aria-controls="details3">
+      <div class="profile-header">
+        <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80" alt="Nina Patel" />
+        <div class="profile-info">
+          <h2 class="name">Nina Patel</h2>
+          <p class="project">Real-Time Embedded System for Drone Control</p>
+          <p class="team">Team C - Robotics and Automation</p>
+        </div>
+      </div>
+      <button aria-controls="details3" aria-expanded="false" class="toggle-btn">More Details</button>
+      <div class="details" id="details3" role="region" aria-live="polite">
+        <img class="project-image" src="https://i.imgur.com/0wBr1e3.jpg" alt="Drone Control Project" />
+        <p><strong>Project Description:</strong> Created a real-time control system for drones using ESP8266, enabling mobile-based control with encrypted video feed.</p>
+        <p><strong>Technologies:</strong> ESP8266, WiFi, Mobile App Integration, Encryption</p>
+        <p><strong>Team Members:</strong></p>
+        <div class="team-members">
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/men/18.jpg" alt="Kevin Brown" /><br />Kevin Brown</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sara Lee" /><br />Sara Lee</div>
+          <div class="team-member"><img src="https://randomuser.me/api/portraits/men/27.jpg" alt="Liam White" /><br />Liam White</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add more profile cards as needed, up to 14 -->
+  </main>
+
+  <script>
+    // Toggle details on button click or card keyboard interaction
+    document.querySelectorAll('.profile-card').forEach(card => {
+      const btn = card.querySelector('.toggle-btn');
+      const details = card.querySelector('.details');
+
+      btn.addEventListener('click', () => {
+        const expanded = card.classList.toggle('expanded');
+        btn.setAttribute('aria-expanded', expanded);
+        card.setAttribute('aria-expanded', expanded);
+      });
+
+      // Also toggle details on Enter or Space key when card is focused
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
